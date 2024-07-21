@@ -36,16 +36,23 @@ if "chat_history" not in st.session_state:
     ]
 
 # Set page configuration
-st.set_page_config(page_title="Streaming Bot", page_icon=":robot_face:")
+st.set_page_config(page_title="RAG ChatBot", page_icon=":robot_face:")
 
 st.title("Streaming RAG Chatbot")
 
-# Button to use local data
-if st.button("Use Local Data"):
-    st.write("Procesando datos locales...")
-    db = process_local_data()
-    st.session_state.db = db
-    st.write("Datos locales procesados y base de datos generada.")
+# Sidebar with buttons
+with st.sidebar:
+    if st.button("Use Local Data"):
+        st.write("Procesando datos locales...")
+        db = process_local_data()
+        st.session_state.db = db
+        st.write("Datos locales procesados y base de datos generada.")
+
+    if st.button("Reset Conversation"):
+        st.session_state.chat_history = [
+            AIMessage(content="Hello, I am a bot. How can I help you?"),
+        ]
+        st.write("Conversación reiniciada.")
 
 # Function to get response
 def get_response(query, chat_history):

@@ -1,7 +1,7 @@
 import os
 from langchain.embeddings import SentenceTransformerEmbeddings
 from indexing.loader import LocalLoader
-from indexing.chunker import update_documents_with_chunks, generate_chunks
+from indexing.chunker import generate_chunks
 
 
 def generate_document(file_path: str, generate_vector = False, embedding = SentenceTransformerEmbeddings(model_name="all-mpnet-base-v2")):
