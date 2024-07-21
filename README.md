@@ -20,6 +20,9 @@ Saver your documents in data folder and click on "Use Local Data" button, or upl
 
 5. Response Generation: The selected chunks are passed to the language model as context in a prompt, the large language model will generates a response using the context or not depending on the original user prompt.
 
+To a b etter understanding take a look to the following diagram:
+![alt text](indexing_and_logic.jpg)
+
 ## Dependencies and Installation
 ----------------------------
 To install the MultiPDF Chat App, please follow these steps:
