@@ -52,9 +52,9 @@ if "chat_history" not in st.session_state:
     ]
 
 # Set page configuration
-st.set_page_config(page_title="Streaming Bot", page_icon=":robot_face:")
+st.set_page_config(page_title="RAG ChatBot", page_icon=":robot_face:")
 
-st.title("Streaming RAG Chatbot")
+st.title("RAG Chatbot")
 
 # Sidebar with buttons
 with st.sidebar:

@@ -1,4 +1,4 @@
-# RAG Chatbot
+# RAG Chatbot 
 This project consists of a webapp retrieval augmented generation (RAG) chatbot
 
 ## Introduction
@@ -10,6 +10,7 @@ The Rag Chatbot Webapp is a Python application that allows you to chat with mult
 The application follows these steps to provide responses to your questions:
 
 1. Document Loading: The app reads multiple PDF or TXT documents and extracts their text content.
+Saver your documents in data folder and click on "Use Local Data" button, or upload documents and click on "Process" button.
 
 2. Text Chunking: The extracted text is divided into smaller chunks that can be processed effectively.
 
