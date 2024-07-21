@@ -5,8 +5,8 @@ import streamlit as st
 import openai
 from langchain_core.messages import HumanMessage, AIMessage
 from chains.chains import main_chain
-from indexing.vectorstore import generate_langchain_vectorstore
-from common.utils import generate_document
+from indexing.vectorstore import generate_langchain_vectorstore, add_document_to_vectordatabase
+from common.utils import generate_document, generate_document_from_uploaded_file
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -24,10 +24,28 @@ def process_local_data():
             if documento:
                 documentos.append(documento)
         except Exception as e:
-            st.error(f"Error al procesar {file_path}: {str(e)}")
+            pass  # Just pass on errors without printing them in the frontend
 
-    db = generate_langchain_vectorstore(documents=documentos)
-    return db
+    if "vector_store" in st.session_state:
+        st.session_state.vector_store = add_document_to_vectordatabase(documentos, st.session_state.vector_store)
+    else:
+        st.session_state.vector_store = generate_langchain_vectorstore(documents=documentos)
+
+def process_uploaded_files(files):
+    """This function processes the uploaded files and updates the vectorstore"""
+    documentos = []
+
+    for file in files:
+        print(file)
+        print(type(file))
+        documento = generate_document_from_uploaded_file(file=file)
+        if documento:
+            documentos.append(documento)
+
+    if "vector_store" in st.session_state:
+        st.session_state.vector_store = add_document_to_vectordatabase(documentos, st.session_state.vector_store)
+    else:
+        st.session_state.vector_store = generate_langchain_vectorstore(documents=documentos)
 
 # Initialize chat history if not in session state
 if "chat_history" not in st.session_state:
@@ -36,16 +54,22 @@ if "chat_history" not in st.session_state:
     ]
 
 # Set page configuration
-st.set_page_config(page_title="RAG ChatBot", page_icon=":robot_face:")
+st.set_page_config(page_title="Streaming Bot", page_icon=":robot_face:")
 
 st.title("Streaming RAG Chatbot")
 
 # Sidebar with buttons
 with st.sidebar:
+    st.subheader("Your documents")
+    files = st.file_uploader("Upload your PDFs here and click on 'Process'", accept_multiple_files=True)
+    if st.button("Process"):
+        with st.spinner("Processing"):
+            process_uploaded_files(files)
+            st.write("Files processed and database updated.")
+
     if st.button("Use Local Data"):
         st.write("Procesando datos locales...")
-        db = process_local_data()
-        st.session_state.db = db
+        process_local_data()
         st.write("Datos locales procesados y base de datos generada.")
 
     if st.button("Reset Conversation"):
@@ -56,13 +80,13 @@ with st.sidebar:
 
 # Function to get response
 def get_response(query, chat_history):
-    if "db" in st.session_state:
-        db = st.session_state.db
+    if "vector_store" in st.session_state:
+        vector_store = st.session_state.vector_store
     else:
-        db = None  # Handle this case as needed
+        vector_store = None  # Handle this case as needed
     
-    chain = main_chain(db)
-    response =  chain.invoke({
+    chain = main_chain(vector_store)
+    response = chain.invoke({
         "chat_history": chat_history,
         "input": query
     })
