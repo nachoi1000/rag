@@ -1,5 +1,4 @@
 import os
-from io import BytesIO
 from langchain.embeddings import SentenceTransformerEmbeddings
 from indexing.loader import LocalLoader, UploadedFileLoader
 from indexing.chunker import generate_chunks

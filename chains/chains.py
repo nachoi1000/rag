@@ -4,7 +4,7 @@ from langchain_openai import ChatOpenAI
 from langchain.chains import create_retrieval_chain
 from langchain.chains.combine_documents import create_stuff_documents_chain
 
-def retriever_chain(vectorstore):
+def retriever_chain(vectorstore, search_type= "similarity", k=5):
     """This function recieves a vectordatabase and returns a chain which will be used as a retriever_chain"""
     
     prompt = ChatPromptTemplate.from_messages([
@@ -13,7 +13,7 @@ def retriever_chain(vectorstore):
     ("user", "Given the above conversation, generate a search query to look up in order to get information relevant to the conversation")
     ])
 
-    retriever = vectorstore.as_retriever()
+    retriever = vectorstore.as_retriever(search_type= search_type,search_kwargs={"k": k})
     
     llm = ChatOpenAI()
     

@@ -36,8 +36,6 @@ def process_uploaded_files(files):
     documentos = []
 
     for file in files:
-        print(file)
-        print(type(file))
         documento = generate_document_from_uploaded_file(file=file)
         if documento:
             documentos.append(documento)
