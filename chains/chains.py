@@ -4,7 +4,7 @@ from langchain_openai import ChatOpenAI
 from langchain.chains import create_retrieval_chain
 from langchain.chains.combine_documents import create_stuff_documents_chain
 
-def retriever_chain(vectorstore, search_type= "similarity", k=5):
+def retriever_chain(vectorstore, gpt_model_name, k, search_type= "similarity"):
     """This function recieves a vectordatabase and returns a chain which will be used as a retriever_chain"""
     
     prompt = ChatPromptTemplate.from_messages([
@@ -15,13 +15,13 @@ def retriever_chain(vectorstore, search_type= "similarity", k=5):
 
     retriever = vectorstore.as_retriever(search_type= search_type,search_kwargs={"k": k})
     
-    llm = ChatOpenAI()
+    llm = ChatOpenAI(model= gpt_model_name)
     
     retriever_chain = create_history_aware_retriever(llm, retriever, prompt)
     return retriever_chain
 
 
-def main_chain(vectorstore):
+def main_chain(vectorstore, gpt_model_name, k):
     """This function recieves a vectorstore and returns a chain which will be used as a conversational_retrieval_chain"""
     
     prompt = ChatPromptTemplate.from_messages([
@@ -30,9 +30,9 @@ def main_chain(vectorstore):
     ("user", "{input}")
     ])
     
-    llm = ChatOpenAI()
+    llm = ChatOpenAI(model= gpt_model_name)
     
     document_chain = create_stuff_documents_chain(llm, prompt)
     
-    conversational_retrieval_chain = create_retrieval_chain(retriever_chain(vectorstore=vectorstore), document_chain)
+    conversational_retrieval_chain = create_retrieval_chain(retriever_chain(vectorstore=vectorstore, gpt_model_name=gpt_model_name, k=k), document_chain)
     return conversational_retrieval_chain

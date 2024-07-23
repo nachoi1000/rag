@@ -76,14 +76,18 @@ with st.sidebar:
         ]
         st.write("Conversación reiniciada.")
 
+    st.subheader("Configuration")
+    gpt_model_name = st.selectbox("Select GPT Model", ["gpt-4o-mini", "gpt-3.5-turbo"])
+    k = st.selectbox("Select k", [3, 4, 5, 6, 7, 8])
+
 # Function to get response
-def get_response(query, chat_history):
+def get_response(query, chat_history, gpt_model_name="gpt-4o-mini", k=5):
     if "vector_store" in st.session_state:
         vector_store = st.session_state.vector_store
     else:
         vector_store = None  # Handle this case as needed
     
-    chain = main_chain(vector_store)
+    chain = main_chain(vector_store, gpt_model_name, k)
     response = chain.invoke({
         "chat_history": chat_history,
         "input": query
@@ -108,7 +112,7 @@ if user_query:
         st.markdown(user_query)
 
     with st.chat_message("AI"):
-        ai_response = get_response(query=user_query, chat_history=st.session_state.chat_history)
+        ai_response = get_response(query=user_query, chat_history=st.session_state.chat_history, gpt_model_name=gpt_model_name, k=k)
         st.markdown(ai_response)
 
     st.session_state.chat_history.append(AIMessage(content=ai_response))

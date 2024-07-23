@@ -52,8 +52,8 @@ def add_documents_vectordatabase(documentos, collection): #Funtion to be used wi
 
 def generate_langchain_vectorstore(documents, embedding_model= SentenceTransformerEmbeddings(model_name="all-mpnet-base-v2") , directory = "vectorstore"):
     """This function receives a list of documents, and returns a vectorstore"""
-    if os.path.exists('vectorstore'):
-        shutil.rmtree('vectorstore')
+    #if os.path.exists('vectorstore'):
+    #    shutil.rmtree('vectorstore')
 
     texts = [chunk for doc in documents for chunk in doc.chunks]
     metadatas = [{'file_name': doc.file_name} for doc in documents for _ in doc.chunks]
